@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  backend:
+    image: users-api-service
+    container_name: backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=1
+    depends_on:
+      - db
+
+  notification:
+    image: notification-service
+    container_name: notification
+    ports:
+      - "5000:5000"
+    depends_on:
+      - backend
+
+  frontend:
+    build:
+      context: ./Frontend
+    container_name: frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+      - notification
+
+  db:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_DB: infraestructura_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 2705
+    ports:
+      - "5432:5432"
