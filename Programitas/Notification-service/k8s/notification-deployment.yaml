@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification
+  template:
+    metadata:
+      labels:
+        app: notification
+    spec:
+      containers:
+        - name: notification
+          image: fennek0beep/notification-service:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: MAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mail-credentials
+                  key: username
+            - name: MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mail-credentials
+                  key: password
