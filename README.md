@@ -17,5 +17,20 @@ Proyecto Full-Stack para el registro de usuarios con Django y React.
 4. Ejecutar frontend: `npm start` (o `yarn start`)
 5. Abrir http://localhost:3000
 
+6. # Dentro de las respectivas carpetas en la terminal:
+
+Backend:
+docker build -t users-api-service .     
+docker run -p 8000:8000 users-api-service
+================================================
+Notification-service:
+docker build -t notification-service . 
+docker run -p 5000:5000 notification-service
+================================================
+Frontend:
+docker build -t frontend-service .   (Con 1 vez basta)
+docker run -p 5173:80 frontend-service
+   
+
 ## Ejecución por Docker
-1. docker-compose up --build
+7. docker-compose up --build
