@@ -82,16 +82,19 @@ WSGI_APPLICATION = 'users_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+import os  # 👈 Agregalo si aún no lo importaste arriba
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'infraestructura_db',
-        'USER': 'postgres',
-        'PASSWORD': '2705',
-        'HOST': 'host.docker.internal',
-        'PORT': '5432',
+        'NAME': os.environ.get('DB_NAME', 'lab-bd'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', 'elmamutqueriavolar1234'),
+        'HOST': os.environ.get('DB_HOST', 'lab-bd.cyise2cljbex.us-east-1.rds.amazonaws.com'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
+
 
 
 # Password validation

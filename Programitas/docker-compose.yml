@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   backend:
-    image: users-api-service
+    image: 445642902280.dkr.ecr.us-east-1.amazonaws.com/users-api:latest
     container_name: backend
     ports:
       - "8000:8000"
@@ -12,7 +12,7 @@ services:
       - db
 
   notification:
-    image: notification-service
+    image: 445642902280.dkr.ecr.us-east-1.amazonaws.com/notification-service:latest
     container_name: notification
     ports:
       - "5000:5000"
@@ -20,8 +20,7 @@ services:
       - backend
 
   frontend:
-    build:
-      context: ./Frontend
+    image: 445642902280.dkr.ecr.us-east-1.amazonaws.com/frontend:latest
     container_name: frontend
     ports:
       - "5173:80"

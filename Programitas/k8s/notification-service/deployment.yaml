@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-deployment
+  labels:
+    app: notification
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification
+  template:
+    metadata:
+      labels:
+        app: notification
+    spec:
+      containers:
+        - name: notification
+          image: 445642902280.dkr.ecr.us-east-1.amazonaws.com/notification-service:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: BACKEND_URL
+              value: "http://backend-service:8000"

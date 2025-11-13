@@ -1,11 +1,12 @@
 import { useState } from "react";
 
-function UserForm({ onUserCreated }) {
+function UserForm() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -13,6 +14,7 @@ function UserForm({ onUserCreated }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       // --- 1️⃣ Crear usuario en el backend Django ---
@@ -22,10 +24,10 @@ function UserForm({ onUserCreated }) {
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) throw new Error("Error al crear usuario");
+      if (!response.ok) throw new Error("Error al crear usuario en Django");
 
-      // --- 2️⃣ Enviar notificación por correo ---
-      await fetch("http://127.0.0.1:5000/notify", {
+      // --- 2️⃣ Enviar notificación por correo (Flask) ---
+      const notifyResponse = await fetch("http://127.0.0.1:5000/notify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -35,13 +37,20 @@ function UserForm({ onUserCreated }) {
         }),
       });
 
-      // --- 3️⃣ Limpiar formulario y avisar ---
+      if (!notifyResponse.ok) {
+        console.warn("⚠️ Usuario creado pero no se pudo enviar el correo.");
+      }
+
+      // --- 3️⃣ Limpiar formulario y actualizar lista de usuarios ---
       setFormData({ name: "", email: "", phone: "" });
-      onUserCreated();
-      alert("✅ Usuario creado y correo enviado!");
+      window.dispatchEvent(new Event("userCreated")); // actualiza lista
+      alert("✅ Usuario creado y notificado!");
+
     } catch (error) {
       console.error(error);
-      alert("⚠️ Ocurrió un error al crear el usuario o enviar el correo.");
+      alert("❌ Error al crear usuario o enviar notificación.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,7 +81,9 @@ function UserForm({ onUserCreated }) {
         onChange={handleChange}
         required
       />
-      <button type="submit">Crear usuario</button>
+      <button type="submit" disabled={loading}>
+        {loading ? "Procesando..." : "Crear usuario"}
+      </button>
     </form>
   );
 }

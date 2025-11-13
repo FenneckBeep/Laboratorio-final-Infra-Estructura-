@@ -22,11 +22,24 @@ export default function UsersList() {
 
   useEffect(() => {
     fetchUsers();
+
+    // 👂 Escucha el evento "userCreated" para actualizar lista sin recargar
+    const handleUserCreated = () => {
+      fetchUsers();
+    };
+    window.addEventListener("userCreated", handleUserCreated);
+
+    // 🔥 Limpieza del listener al desmontar
+    return () => {
+      window.removeEventListener("userCreated", handleUserCreated);
+    };
   }, []);
 
   const deleteUser = async (id) => {
     if (!window.confirm("¿Seguro que querés eliminar este usuario?")) return;
-    const res = await fetch(`http://127.0.0.1:8000/users/delete/${id}/`, { method: "DELETE" });
+    const res = await fetch(`http://127.0.0.1:8000/users/delete/${id}/`, {
+      method: "DELETE",
+    });
     if (res.ok) {
       alert("Usuario eliminado ✅");
       setUsers(users.filter((u) => u.id !== id));
@@ -60,7 +73,8 @@ export default function UsersList() {
     }
   };
 
-  const handleChange = (e) => setEditData({ ...editData, [e.target.name]: e.target.value });
+  const handleChange = (e) =>
+    setEditData({ ...editData, [e.target.name]: e.target.value });
 
   if (loading) return <p>Cargando usuarios...</p>;
 
@@ -75,9 +89,24 @@ export default function UsersList() {
             <li key={user.id}>
               {editingId === user.id ? (
                 <>
-                  <input type="text" name="name" value={editData.name} onChange={handleChange} />
-                  <input type="email" name="email" value={editData.email} onChange={handleChange} />
-                  <input type="text" name="phone" value={editData.phone} onChange={handleChange} />
+                  <input
+                    type="text"
+                    name="name"
+                    value={editData.name}
+                    onChange={handleChange}
+                  />
+                  <input
+                    type="email"
+                    name="email"
+                    value={editData.email}
+                    onChange={handleChange}
+                  />
+                  <input
+                    type="text"
+                    name="phone"
+                    value={editData.phone}
+                    onChange={handleChange}
+                  />
                   <button onClick={() => saveEdit(user.id)}>Guardar</button>
                   <button onClick={cancelEdit}>Cancelar</button>
                 </>

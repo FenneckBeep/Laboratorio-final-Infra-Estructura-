@@ -1,8 +1,7 @@
 import requests
 
-
 def send_notification(subject, recipient, message):
-    url = "http://host.docker.internal:5000/notify"  # 🔹 corregido: host.docker.internal y ruta /notify
+    url = "http://notification-service.notifications.svc.cluster.local:5000/notify"
     payload = {
         "subject": subject,
         "recipient": recipient,
