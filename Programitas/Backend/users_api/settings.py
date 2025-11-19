@@ -28,19 +28,19 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+# ----------------------------------------
+# Configuración de CORS
+# ----------------------------------------
+# Instala django-cors-headers si no lo tenés: pip install django-cors-headers
+
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    # ... tus apps actuales
     'corsheaders',
     'userapp',
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',  # 👈 Mueve esto al principio
+    'corsheaders.middleware.CorsMiddleware',  # <-- tiene que estar primero
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -50,14 +50,18 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# 🌍 Permitir solicitudes del frontend (React)
+# Permitir tu frontend local
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
+    "http://localhost:8080",
+    "http://127.0.0.1:8080",
 ]
 
-# 👇 Esto a veces es necesario si tu frontend usa credenciales (cookies o headers personalizados)
+# Si usas cookies o headers personalizados
 CORS_ALLOW_CREDENTIALS = True
+
+# ⚠️ Solo para pruebas locales: permite todos los orígenes
+# CORS_ALLOW_ALL_ORIGINS = True
+
 
 ROOT_URLCONF = 'users_api.urls'
 

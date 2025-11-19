@@ -6,9 +6,12 @@ export default function UsersList() {
   const [editingId, setEditingId] = useState(null);
   const [editData, setEditData] = useState({ name: "", email: "", phone: "" });
 
+  // 🔥 localhost por port-forward
+  const API_URL = "http://localhost:8000";
+
   const fetchUsers = () => {
     setLoading(true);
-    fetch("http://127.0.0.1:8000/users/list/")
+    fetch(`${API_URL}/users/list/`)
       .then((res) => res.json())
       .then((data) => {
         setUsers(data);
@@ -23,13 +26,12 @@ export default function UsersList() {
   useEffect(() => {
     fetchUsers();
 
-    // 👂 Escucha el evento "userCreated" para actualizar lista sin recargar
     const handleUserCreated = () => {
       fetchUsers();
     };
+
     window.addEventListener("userCreated", handleUserCreated);
 
-    // 🔥 Limpieza del listener al desmontar
     return () => {
       window.removeEventListener("userCreated", handleUserCreated);
     };
@@ -37,9 +39,11 @@ export default function UsersList() {
 
   const deleteUser = async (id) => {
     if (!window.confirm("¿Seguro que querés eliminar este usuario?")) return;
-    const res = await fetch(`http://127.0.0.1:8000/users/delete/${id}/`, {
+
+    const res = await fetch(`${API_URL}/users/delete/${id}/`, {
       method: "DELETE",
     });
+
     if (res.ok) {
       alert("Usuario eliminado ✅");
       setUsers(users.filter((u) => u.id !== id));
@@ -59,11 +63,12 @@ export default function UsersList() {
   };
 
   const saveEdit = async (id) => {
-    const res = await fetch(`http://127.0.0.1:8000/users/update/${id}/`, {
+    const res = await fetch(`${API_URL}/users/update/${id}/`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(editData),
     });
+
     if (res.ok) {
       alert("Usuario actualizado ✅");
       setUsers(users.map((u) => (u.id === id ? { ...u, ...editData } : u)));

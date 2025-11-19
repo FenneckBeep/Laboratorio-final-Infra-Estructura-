@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend-deployment
+  namespace: frontend
   labels:
     app: frontend
 spec:
@@ -16,19 +17,11 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: 445642902280.dkr.ecr.us-east-1.amazonaws.com/frontend:latest
+          image: 137505600553.dkr.ecr.us-east-1.amazonaws.com/frontend:latest
           ports:
             - containerPort: 80
           env:
             - name: VITE_BACKEND_URL
-              value: "http://backend-service:8000"
+              value: "http://backend-service.backend.svc.cluster.local:8000"
             - name: VITE_NOTIFICATION_URL
-              value: "http://notification-service:5000"
-          # 🧩 Nuevas líneas para pasar args al build
-          args:
-            - sh
-            - -c
-            - |
-              VITE_BACKEND_URL=$VITE_BACKEND_URL \
-              VITE_NOTIFICATION_URL=$VITE_NOTIFICATION_URL \
-              nginx -g "daemon off;"
+              value: "http://notification-service.notification.svc.cluster.local:5000"

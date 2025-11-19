@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: 445642902280.dkr.ecr.us-east-1.amazonaws.com/users-api:latest
+          image: 137505600553.dkr.ecr.us-east-1.amazonaws.com/backend:latest
           ports:
             - containerPort: 8000
           env:
@@ -35,6 +35,9 @@ spec:
                   name: db-credentials
                   key: DB_PASSWORD
             - name: DB_HOST
-              value: "lab-bd.cyise2cljbex.us-east-1.rds.amazonaws.com"
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: DB_HOST
             - name: DB_PORT
               value: "5432"

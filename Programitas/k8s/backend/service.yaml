@@ -3,13 +3,11 @@ kind: Service
 metadata:
   name: backend-service
   namespace: backend
-  annotations:
-    service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
 spec:
   selector:
     app: backend
-  type: LoadBalancer
   ports:
     - protocol: TCP
       port: 8000
       targetPort: 8000
+  type: ClusterIP
